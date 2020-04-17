@@ -1,9 +1,7 @@
 ---
 page_type: sample
-languages:
-- csharp
-products:
-- dotnet
+languages: csharp
+products: dotnet
 ---
 
 # Build plug-in to block or enforce MFA based on riskiness of the user determined by AzureAD Identity Protection tool
