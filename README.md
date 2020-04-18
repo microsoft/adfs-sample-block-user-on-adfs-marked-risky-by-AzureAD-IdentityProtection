@@ -4,15 +4,18 @@ languages: csharp
 products: dotnet
 ---
 
-# Build plug-in to block or enforce MFA based on riskiness of the user determined by AzureAD Identity Protection tool
+# Build plug-in to block or enforce MFA based on risk level of the user determined by Azure AD Identity Protection
 
-Build your own plug-in with [AD FS Risk Assessment Model](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/development/ad-fs-risk-assessment-model) that uses the riskiness of a user determined by [Azure AD Identity Protection](https://docs.microsoft.com/en-us/azure/active-directory/identity-protection/overview-identity-protection) tool to
-- Allow “no risk” user to authenticate against AD FS
-- Block “high risk” user from authenticating
-- Enforce additional authentication (MFA) for “low risk” or “medium risk” user
+Build your own plug-in with [AD FS Risk Assessment Model](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/development/ad-fs-risk-assessment-model) that uses the risk level of a user determined by [Azure AD Identity Protection](https://docs.microsoft.com/en-us/azure/active-directory/identity-protection/overview-identity-protection) to allow or block authentication or enforce additional authentication (MFA) while authenticating the user againsts AD FS. 
+
+The plug-in once registered with AD FS runs in line with AD FS authentication process. For any user authenticating against AD FS, the plug-in pulls in the Risk Level of the user using the Azure AD Identity Protection [riskyUser API](https://docs.microsoft.com/en-us/graph/api/resources/riskyuser?view=graph-rest-beta) and initiates one of the follwing actions
+- Blocks authentication if user's risk level is “High”
+- Enforces additional authentication (MFA) if user's risk level is “Low” or “Medium”
+- Allows authentication if user's risk level is "none"
 
  >[!NOTE]
- >If you have an AD FS farm, the above needs to be executed on each AD FS server in the farm. 
+ >This sample is only to illustrate how cloud intelligence from Azure AD Identity Protection can be used to further strengthen the AD FS authentication process. By no means is the plug-in we are building an enterprise ready solution. 
+
 
 ## Prerequisites
 
@@ -28,25 +31,14 @@ Build your own plug-in with [AD FS Risk Assessment Model](https://docs.microsoft
 
 The following procedure will walk you through building a sample plug-in dll.
 
-1. Download the sample plug-in, use Git Bash and type the following: 
+1. Download the [sample](https://github.com/Microsoft/adfs-sample-RiskAssessmentModel-RiskyIPBlock)
+  
+2. Open the project `ThreatDetectionModule.sln` using Visual Studio
 
-   ```
-   git clone https://github.com/Microsoft/adfs-sample-RiskAssessmentModel-RiskyIPBlock
-   ```
-
-2. Create a **.csv** file at any location on your AD FS server (In my case, I created the **authconfigdb.csv** file at **C:\extensions**) and add the IPs you want to block to this file. 
-
-   The sample plug-in will block any authentication requests coming from the **Extranet IPs** listed in this file. 
-
-   >{!NOTE]
-   > If you have an AD FS Farm, you can create the file on any or all the AD FS servers. Any of the files can be used to import the risky IPs into AD FS. We will discuss the import process in detail in the [Register the plug-in dll with AD FS](#register-the-plug-in-dll-with-ad-fs) section below. 
-
-3. Open the project `ThreatDetectionModule.sln` using Visual Studio
-
-4. Remove the `Microsoft.IdentityServer.dll` from the Solutions Explorer as shown below:</br>
+3. Remove the `Microsoft.IdentityServer.dll` from the Solutions Explorer as shown below:</br>
    ![model](media/risk2.png)
 
-5. Add reference to the `Microsoft.IdentityServer.dll` of your AD FS as shown below
+4. Add reference to the `Microsoft.IdentityServer.dll` of your AD FS as shown below
 
    a.    Right click on **References** in **Solutions Explorer** and select **Add Reference…**</br> 
    ![model](media/risk3.png)
@@ -61,7 +53,20 @@ The following procedure will walk you through building a sample plug-in dll.
    c.    Click **OK** on the **Reference Manager** window after making sure `Microsoft.IdentityServer.dll` checkbox is selected</br>
    ![model](media/risk5.png)
  
-6. All the classes and references are now in place to do a build.   However, since the output of this project is a dll,  it will have to be installed into the **Global Assembly Cache**, or GAC, of the AD FS server and the dll needs to be signed first. This can be done as follows:
+5. Open **UserRiskAnalyzer.cs** from the **Solutions Explorer** to update the Azure AD tenant name, Client ID and Client Secret 
+![model](media/risk15.png)
+
+To get these 
+   a.    **Right-click** on the name of the project, ThreatDetectionModule. From the menu, click **Properties**.</br>
+   ![model](media/risk6.png)
+   
+   b.    From the **Properties** page, click **Signing**, on the left, and then check the checkbox marked **Sign the assembly**. From the **Choose a strong name key file**: pull down menu, select **<New...>**</br>
+   ![model](media/risk7.png)
+
+
+
+
+All the classes and references are now in place to do a build.   However, since the output of this project is a dll,  it will have to be installed into the **Global Assembly Cache**, or GAC, of the AD FS server and the dll needs to be signed first. This can be done as follows:
 
    a.    **Right-click** on the name of the project, ThreatDetectionModule. From the menu, click **Properties**.</br>
    ![model](media/risk6.png)
@@ -69,13 +74,13 @@ The following procedure will walk you through building a sample plug-in dll.
    b.    From the **Properties** page, click **Signing**, on the left, and then check the checkbox marked **Sign the assembly**. From the **Choose a strong name key file**: pull down menu, select **<New...>**</br>
    ![model](media/risk7.png)
 
-   c.    In the **Create Strong Name Key dialogue**, type a name (you can choose any name) for the key, uncheck the checkbox **Protect my key file with password**. Then, click **OK**.
-   ![model](media/risk8.png)</br>
+   c.    In the **Create Strong Name Key dialogue**, type a name (you can choose any name) for the key, uncheck the checkbox **Protect my key file with password**. Then, click **OK** </br>
+   ![model](media/risk8.png)
  
    d.    Save the project as shown below</br>
    ![model](media/risk9.png)
 
-7. Build the project by clicking **Build** and then **Rebuild Solution** as shown below</br>
+6. Build the project by clicking **Build** and then **Rebuild Solution** as shown below</br>
    ![model](media/risk10.png)
  
    Check the **Output window**, at the bottom of the screen, to see if any errors occurred</br>
@@ -112,11 +117,11 @@ We need to register the dll in AD FS by using the `Register-AdfsThreatDetectionM
 
 5. Open **Windows PowerShell** and run the following command to register the dll
    ```
-   Register-AdfsThreatDetectionModule -Name "<Add a name>" -TypeName "<class name that implements interface>, <dll name>, Version=10.0.0.0, Culture=neutral, PublicKeyToken=< Add the Public Key Token from Step 2. above>" -ConfigurationFilePath "<path of the .csv file>"
+   Register-AdfsThreatDetectionModule -Name "<Add a name>" -TypeName "<class name that implements interface>, <dll name>, Version=10.0.0.0, Culture=neutral, PublicKeyToken=< Add the Public Key Token from Step 2. above>"
    ```
    In my case, the command is: 
    ```
-   Register-AdfsThreatDetectionModule -Name "IPBlockPlugin" -TypeName "ThreatDetectionModule.UserRiskAnalyzer, ThreatDetectionModule, Version=10.0.0.0, Culture=neutral, PublicKeyToken=714697626ef96b35" -ConfigurationFilePath "C:\extensions\authconfigdb.csv"
+   Register-AdfsThreatDetectionModule -Name "RiskyUserPlugin" -TypeName "ThreatDetectionModule.UserRiskAnalyzer, ThreatDetectionModule, Version=10.0.0.0, Culture=neutral, PublicKeyToken=714697626ef96b35"
    ```
  
    >[!NOTE]
@@ -133,7 +138,7 @@ That's it, the dll is now registered with AD FS and ready for use!
  >`</br></br> 
  >In my case, the command is:
  >``` 
- >UnRegister-AdfsThreatDetectionModule -Name "IPBlockPlugin"
+ >UnRegister-AdfsThreatDetectionModule -Name "RiskyUserPlugin"
  >```
 
 ## Running the sample
