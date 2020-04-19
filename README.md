@@ -59,13 +59,13 @@ The following procedure will walk you through building a sample plug-in dll.
    To get these perform the following steps in **[Azure Portal](https://portal.azure.com/)**
    
    a.    To get **Azure AD tenant name**, go to **[Azure Active Directory](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview)** blade and select **Properties** from the **Manage** section on the left navigation pane. (In my case the tenant name is fabtoso.com as shown under **Directory properties** in **Name** field)</br>
-   ![model](media/risk16.png)
+   ![model](media/risk16.PNG)
    
    b.    To get the **Client ID** we first need to register the plug-in in Azure Active Directory. To do so, go to **[App Registration](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)**, click **New Registration** </br>
    ![model](media/risk17.png)
 
    On **New Registration**, enter a name for the plug-in and click **Register** (Note - For other fields, I am keeping the default values) </br>
-   ![model](media/risk18.png)
+   ![model](media/risk18.PNG)
 
    Once registered, get the **Client ID** for the registered plug-in as shown below </br>
    ![model](media/risk19.png)
@@ -173,7 +173,7 @@ That's it, the dll is now registered with AD FS and ready for use!
 For this demonstration, I will be using [AD FS Help Claims X-Ray tool](https://adfshelp.microsoft.com/ClaimsXray) to initiate a request. If you would like to use the X-Ray tool, please follow the instructions in step 1 **Federation Services Configuration** to create a relying party trust for the service in your federation deployment. 
 
 1. Enter federation server instance and hit **Test Authentication** in step 2 of Claims X-Ray tool</br> 
-![model](media/risk26.png)
+![model](media/risk26.PNG)
 
 2. On the login page, enter the user id and password of a non risky user (risk level = none) </br> 
 ![model](media/risk27.png)
@@ -187,7 +187,7 @@ To check the risk level of a user, go to **[Risky users report](https://portal.a
 For testing purpose, to make a user risky (with risk level = Low) login with user credentials to Azure Portal from a [TOR browser](https://www.torproject.org/projects/torbrowser.html.en)
 
 The plug-in will trigger additional authentication as per the configuration (In my case I have configured Azure MFA) </br> 
-![model](media/risk28.png)
+![model](media/risk28.PNG)
 
 Once authenticated, the user should be able to log in. 
 
