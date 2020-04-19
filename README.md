@@ -50,67 +50,67 @@ The following procedure will walk you through building a sample plug-in dll.
    
    ![model](media/risk4.png)
    
-   c.    Click **OK** on the **Reference Manager** window after making sure `Microsoft.IdentityServer.dll` checkbox is selected</br>
+   c.    Click **OK** on the **Reference Manager** window after making sure `Microsoft.IdentityServer.dll` checkbox is selected</br> </br>
    ![model](media/risk5.png)
  
-5. Open **UserRiskAnalyzer.cs** from the **Solutions Explorer** to update the Azure AD tenant name, Client ID and Client Secret 
+5. Open **UserRiskAnalyzer.cs** from the **Solutions Explorer** to update the Azure AD tenant name, Client ID and Client Secret </br> </br>
 ![model](media/risk15.png)
 
-   To get these perform the following steps in **[Azure Portal](https://portal.azure.com/)**
+   </br> To get these perform the following steps in **[Azure Portal](https://portal.azure.com/)**
    
-   a.    To get **Azure AD tenant name**, go to **[Azure Active Directory](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview)** blade and select **Properties** from the **Manage** section on the left navigation pane. (In my case the tenant name is fabtoso.com as shown under **Directory properties** in **Name** field)</br>
+   a.    To get **Azure AD tenant name**, go to **[Azure Active Directory](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview)** blade and select **Properties** from the **Manage** section on the left navigation pane. (In my case the tenant name is fabtoso.com as shown under **Directory properties** in **Name** field)</br> </br>
    ![model](media/risk16.PNG)
    
-   b.    To get the **Client ID** we first need to register the plug-in in Azure Active Directory. To do so, go to **[App Registration](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)**, click **New Registration** </br>
+   b.    To get the **Client ID** we first need to register the plug-in in Azure Active Directory. To do so, go to **[App Registration](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)**, click **New Registration** </br> </br>
    ![model](media/risk17.png)
 
-   On **New Registration**, enter a name for the plug-in and click **Register** (Note - For other fields, I am keeping the default values) </br>
+   On **New Registration**, enter a name for the plug-in and click **Register** (Note - For other fields, I am keeping the default values) </br> </br>
    ![model](media/risk18.PNG)
 
-   Once registered, get the **Client ID** for the registered plug-in as shown below </br>
+   Once registered, get the **Client ID** for the registered plug-in as shown below </br> </br>
    ![model](media/risk19.png)
 
-   c.    To get the **Client Secret** click **Certificates & secrets** from the **Manage** section on the left navigation pane as shown below </br>
+   c.    To get the **Client Secret** click **Certificates & secrets** from the **Manage** section on the left navigation pane as shown below </br> </br>
    ![model](media/risk20.png)
  
-   On **Certificates & secrets** blade, click **New client secret** and follow the process the generate the secret </br>
+   On **Certificates & secrets** blade, click **New client secret** and follow the process the generate the secret </br> </br>
    ![model](media/risk21.png)
 
    Once generated, get the secret to update in the **UserRiskAnalyzer.cs** file. 
 
    d.    Though we have registered the plug-in in Azure Active Directory, we also need to provide it permission to call the Microsoft Graph API i.e. the riskyUser API
    
-   To provide permission, click on **API permissions** from the **Manage** section on the left navigation pane. Then click **Add a permission** </br>
+   To provide permission, click on **API permissions** from the **Manage** section on the left navigation pane. Then click **Add a permission** </br> </br>
    ![model](media/risk22.png)
 
-   On **Request API permissions** blade, select **Microsoft Graph** </br>
+   On **Request API permissions** blade, select **Microsoft Graph** </br> </br>
    ![model](media/risk23.png)
 
-   Next, select **Application permissions** and search **identityriskyuser** under **Select permissions**. Select checkbox for **IdentityRiskyUser.Read.All** permission and click **Add permissions** </br>
+   Next, select **Application permissions** and search **identityriskyuser** under **Select permissions**. Select checkbox for **IdentityRiskyUser.Read.All** permission and click **Add permissions** </br> </br>
    ![model](media/risk24.png)
 
-   Lastly, click on **API permissions** from the **Manage** section on the left navigation pane. Select the **IdentityRiskyUser.Read.All** permission row and click on **Grant admin consent for [tenant name]**. Click **Yes** </br>
+   Lastly, click on **API permissions** from the **Manage** section on the left navigation pane. Select the **IdentityRiskyUser.Read.All** permission row and click on **Grant admin consent for [tenant name]**. Click **Yes** </br> </br>
    ![model](media/risk25.png)
 
 
 6. All the classes and references are now in place to do a build.   However, since the output of this project is a dll,  it will have to be installed into the **Global Assembly Cache**, or GAC, of the AD FS server and the dll needs to be signed first. This can be done as follows:
 
-   a.    **Right-click** on the name of the project, ThreatDetectionModule. From the menu, click **Properties**.</br>
+   a.    **Right-click** on the name of the project, ThreatDetectionModule. From the menu, click **Properties**.</br> </br>
    ![model](media/risk6.png)
    
-   b.    From the **Properties** page, click **Signing**, on the left, and then check the checkbox marked **Sign the assembly**. From the **Choose a strong name key file**: pull down menu, select **<New...>**</br>
+   b.    From the **Properties** page, click **Signing**, on the left, and then check the checkbox marked **Sign the assembly**. From the **Choose a strong name key file**: pull down menu, select **<New...>**</br> </br>
    ![model](media/risk7.png)
 
-   c.    In the **Create Strong Name Key dialogue**, type a name (you can choose any name) for the key, uncheck the checkbox **Protect my key file with password**. Then, click **OK** </br>
+   c.    In the **Create Strong Name Key dialogue**, type a name (you can choose any name) for the key, uncheck the checkbox **Protect my key file with password**. Then, click **OK** </br> </br>
    ![model](media/risk8.png)
  
-   d.    Save the project as shown below</br>
+   d.    Save the project as shown below</br> </br>
    ![model](media/risk9.png)
 
-7. Build the project by clicking **Build** and then **Rebuild Solution** as shown below</br>
+7. Build the project by clicking **Build** and then **Rebuild Solution** as shown below</br> </br>
    ![model](media/risk10.png)
  
-   Check the **Output window**, at the bottom of the screen, to see if any errors occurred</br>
+   Check the **Output window**, at the bottom of the screen, to see if any errors occurred</br> </br>
    ![model](media/risk11.png)
 
 
@@ -124,11 +124,11 @@ We need to register the dll in AD FS by using the `Register-AdfsThreatDetectionM
 
 1. Copy the dll file from the **\bin\Debug** folder to another location (In my case copying it to **C:\extensions**)
 
-2. Start the **Developer Command Prompt** for Visual Studio and go to the directory containing the **sn.exe** (In my case the directory is **C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.7.2 Tools**)
+2. Start the **Developer Command Prompt** for Visual Studio and go to the directory containing the **sn.exe** (In my case the directory is **C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.7.2 Tools**) </br> </br>
    ![model](media/risk12.png)
 
-3. Run the **SN** command with the **-T** parameter and the location of the file (In my case `SN -T "C:\extensions\ThreatDetectionModule.dll"`)
-   ![model](media/risk13.png)</br>
+3. Run the **SN** command with the **-T** parameter and the location of the file (In my case `SN -T "C:\extensions\ThreatDetectionModule.dll"`) </br> </br>
+   ![model](media/risk13.png)</br> </br>
    The command will provide you the public key token (For me, the **Public Key Token is 714697626ef96b35**)
 
 4. Add the dll to the **Global Assembly Cache** of the AD FS server
@@ -136,7 +136,7 @@ We need to register the dll in AD FS by using the `Register-AdfsThreatDetectionM
 
    a.    On Developer Command Prompt for Visual Studio and go to the directory containing the **Gacutil.exe** (In my case the directory is **C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.7.2 Tools**)
 
-   b.    Run the **Gacutil** command (In my case `Gacutil /IF C:\extensions\ThreatDetectionModule.dll`)
+   b.    Run the **Gacutil** command (In my case `Gacutil /IF C:\extensions\ThreatDetectionModule.dll`) </br> </br>
    ![model](media/risk14.png)
  
    >[!NOTE]
@@ -172,10 +172,10 @@ That's it, the dll is now registered with AD FS and ready for use!
 
 For this demonstration, I will be using [AD FS Help Claims X-Ray tool](https://adfshelp.microsoft.com/ClaimsXray) to initiate a request. If you would like to use the X-Ray tool, please follow the instructions in step 1 **Federation Services Configuration** to create a relying party trust for the service in your federation deployment. 
 
-1. Enter federation server instance and hit **Test Authentication** in step 2 of Claims X-Ray tool</br> 
+1. Enter federation server instance and hit **Test Authentication** in step 2 of Claims X-Ray tool</br> </br>
 ![model](media/risk26.PNG)
 
-2. On the login page, enter the user id and password of a non risky user (risk level = none) </br> 
+2. On the login page, enter the user id and password of a non risky user (risk level = none) </br> </br>
 ![model](media/risk27.png)
 
 The user should be able to log in. 
@@ -186,7 +186,7 @@ To check the risk level of a user, go to **[Risky users report](https://portal.a
 
 For testing purpose, to make a user risky (with risk level = Low) login with user credentials to Azure Portal from a [TOR browser](https://www.torproject.org/projects/torbrowser.html.en)
 
-The plug-in will trigger additional authentication as per the configuration (In my case I have configured Azure MFA) </br> 
+The plug-in will trigger additional authentication as per the configuration (In my case I have configured Azure MFA) </br> </br>
 ![model](media/risk28.PNG)
 
 Once authenticated, the user should be able to log in. 
@@ -196,7 +196,7 @@ Once authenticated, the user should be able to log in.
 For testing purpose, to make a user risky (with risk level = High) login to **[Risky users report](https://portal.azure.com/#blade/Microsoft_AAD_IAM/SecurityMenuBlade/RiskyUsers)** in Azure Portal as an Administrator. Select the user you want to change the risk level to High and click **Confirm user compromised** </br> 
 ![model](media/risk29.png)
 
-The plug-in will block the user from authenticating</br> 
+The plug-in will block the user from authenticating </br> </br>
 ![model](media/risk30.png)
 
  >[!NOTE]
