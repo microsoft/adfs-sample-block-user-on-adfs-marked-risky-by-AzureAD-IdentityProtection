@@ -53,10 +53,10 @@ The following procedure will walk you through building a sample plug-in dll.
    c.    Click **OK** on the **Reference Manager** window after making sure `Microsoft.IdentityServer.dll` checkbox is selected</br> </br>
    ![model](media/risk5.png)
  
-5. Open **UserRiskAnalyzer.cs** from the **Solutions Explorer** to update the Azure AD tenant name, Client ID and Client Secret </br> </br>
+5. Open **RiskyUserHelper.cs** from the **Solutions Explorer** to update the Azure AD tenant name, Client ID and Client Secret </br> </br>
 ![model](media/risk15.png)
 
-   </br> To get these perform the following steps in **[Azure Portal](https://portal.azure.com/)**
+   </br> To get these perform the following steps as Administrator in **[Azure Portal](https://portal.azure.com/)**
    
    a.    To get **Azure AD tenant name**, go to **[Azure Active Directory](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview)** blade and select **Properties** from the **Manage** section on the left navigation pane. (In my case the tenant name is fabtoso.com as shown under **Directory properties** in **Name** field)</br> </br>
    ![model](media/risk16.PNG)
@@ -73,10 +73,10 @@ The following procedure will walk you through building a sample plug-in dll.
    c.    To get the **Client Secret** click **Certificates & secrets** from the **Manage** section on the left navigation pane as shown below </br> </br>
    ![model](media/risk20.png)
  
-   On **Certificates & secrets** blade, click **New client secret** and follow the process the generate the secret </br> </br>
+   On **Certificates & secrets** blade, click **New client secret** and follow the process to generate the secret </br> </br>
    ![model](media/risk21.png)
 
-   Once generated, get the secret to update in the **UserRiskAnalyzer.cs** file. 
+   Once generated, get the secret to update in the **RiskyUserHelper.cs** file. 
 
    d.    Though we have registered the plug-in in Azure Active Directory, we also need to provide it permission to call the Microsoft Graph API i.e. the riskyUser API
    
@@ -170,37 +170,38 @@ That's it, the dll is now registered with AD FS and ready for use!
 
 ## Running the sample
 
-For this demonstration, I will be using [AD FS Help Claims X-Ray tool](https://adfshelp.microsoft.com/ClaimsXray) to initiate a request. If you would like to use the X-Ray tool, please follow the instructions in step 1 **Federation Services Configuration** to create a relying party trust for the service in your federation deployment. 
+For this demonstration, I will be using [AD FS Help Claims X-Ray tool](https://adfshelp.microsoft.com/ClaimsXray) to initiate authentication request. If you would like to use the X-Ray tool, please follow the instructions in step 1 **Federation Services Configuration** to create a relying party trust for the service in your federation deployment. 
 
 1. Enter federation server instance and hit **Test Authentication** in step 2 of Claims X-Ray tool</br> </br>
-![model](media/risk26.PNG)
+   ![model](media/risk26.PNG)
 
 2. On the login page, enter the user id and password of a non risky user (risk level = none) </br> </br>
-![model](media/risk27.png)
+   ![model](media/risk27.png)
 
-The user should be able to log in. 
+   The user should be able to log in. 
 
 3. Repeat step 1 above and on the login page enter a user id and password of a low risk user (risk level = Low)
 
-To check the risk level of a user, go to **[Risky users report](https://portal.azure.com/#blade/Microsoft_AAD_IAM/SecurityMenuBlade/RiskyUsers)** in Azure Portal.    
+    >[!NOTE]
+    >To check the risk level of a user, go to **[Risky users report](https://portal.azure.com/#blade/Microsoft_AAD_IAM/SecurityMenuBlade/RiskyUsers)** in Azure Portal.</br>
+    >For testing purpose, to make a user risky (with risk level = Low) login with user credentials to Azure Portal from a [TOR browser](https://www.torproject.org/projects/torbrowser.html.en)
 
-For testing purpose, to make a user risky (with risk level = Low) login with user credentials to Azure Portal from a [TOR browser](https://www.torproject.org/projects/torbrowser.html.en)
+   The plug-in will trigger additional authentication as per the configuration (In my case I have configured Azure MFA) </br> </br>
+   ![model](media/risk28.PNG)
 
-The plug-in will trigger additional authentication as per the configuration (In my case I have configured Azure MFA) </br> </br>
-![model](media/risk28.PNG)
-
-Once authenticated, the user should be able to log in. 
+   Once authenticated, the user should be able to log in. 
 
 4. Repeat step 1 above and on the login page enter a user id and password of a high risk user (risk level = High)
 
-For testing purpose, to make a user risky (with risk level = High) login to **[Risky users report](https://portal.azure.com/#blade/Microsoft_AAD_IAM/SecurityMenuBlade/RiskyUsers)** in Azure Portal as an Administrator. Select the user you want to change the risk level to High and click **Confirm user compromised** </br> 
-![model](media/risk29.png)
+   >[!NOTE]
+   >For testing purpose, to make a user risky (with risk level = High) login to **[Risky users report](https://portal.azure.com/#blade/Microsoft_AAD_IAM/SecurityMenuBlade/RiskyUsers)** in Azure Portal as an Administrator. Select the user you want to change the risk level to High and click **Confirm user compromised** </br> </br>
+   >![model](media/risk29.png)
 
-The plug-in will block the user from authenticating </br> </br>
-![model](media/risk30.png)
+   The plug-in will block the user from authenticating </br> </br>
+   ![model](media/risk30.png)
 
  >[!NOTE]
- >The sample plug-in gets the complete list of risky users for each authentication which can cause delay in authentication process. Therefore, the plug-in should be tested against an Azure AD tenant with less number of users to avoid delays or optimized to use caching or [Get riskyUser method](https://docs.microsoft.com/en-us/graph/api/riskyusers-get?view=graph-rest-beta&tabs=http) 
+ >The sample plug-in gets the complete list of risky users for each authentication which can cause delay in authentication process. Therefore, the plug-in should be tested against an Azure AD tenant with a few number of users to avoid delays or should be optimized to use caching or [Get riskyUser method](https://docs.microsoft.com/en-us/graph/api/riskyusers-get?view=graph-rest-beta&tabs=http) 
 
 
 ## Contributing
