@@ -35,12 +35,12 @@ The following procedure will walk you through building a sample plug-in dll.
   
 2. Open the project `ThreatDetectionModule.sln` using Visual Studio
 
-3. Remove the `Microsoft.IdentityServer.dll` from the Solutions Explorer as shown below:</br>
+3. Remove the `Microsoft.IdentityServer.dll` from the Solutions Explorer as shown below:</br> </br>
    ![model](media/risk2.png)
 
 4. Add reference to the `Microsoft.IdentityServer.dll` of your AD FS as shown below
 
-   a.    Right click on **References** in **Solutions Explorer** and select **Add Reference…**</br> 
+   a.    Right click on **References** in **Solutions Explorer** and select **Add Reference…**</br> </br>
    ![model](media/risk3.png)
    
    b.    On the **Reference Manager** window select **Browse**. In the **Select the files to reference…** dialogue, select `Microsoft.IdentityServer.dll` from your AD FS installation folder (in my case **C:\Windows\ADFS**) and click **Add**.
