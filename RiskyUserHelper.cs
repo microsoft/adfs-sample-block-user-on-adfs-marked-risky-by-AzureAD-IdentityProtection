@@ -19,12 +19,9 @@ namespace ThreatDetectionModule
 
     internal static class RiskyUserHelper
     {
-        //internal static string TenantName = "[Azure AD Tenant Name]";
-        //internal static string ClientId = "[Application (client) Id]";
-        //internal static string ClientSecret = "[Application (client) Secret]";
-        internal static string TenantName = "fabtoso.com";
-        internal static string ClientId = "65cd9494-0f9c-4798-a5cc-94fff2c7ce40";
-        internal static string ClientSecret = "X8L138wSbbjM.iPScy.RI/lPwN@h1[U_";
+        internal static string TenantName = "[Enter Azure AD Tenant Name]";
+        internal static string ClientId = "[Enter Application (client) Id]";
+        internal static string ClientSecret = "[Enter Application (client) Secret]";
         internal static string LoginURL = String.Format("https://login.microsoft.com/{0}/oauth2/token?api-version=1.0", TenantName);
         internal class RiskyList
         {
