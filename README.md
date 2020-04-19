@@ -4,7 +4,7 @@ languages: csharp
 products: dotnet
 ---
 
-# Build plug-in to block or enforce MFA based on risk level of the user determined by Azure AD Identity Protection
+# Build AD FS plug-in to block authentication or enforce MFA based on user risk level determined by Azure AD Identity Protection
 
 Build your own plug-in with [AD FS Risk Assessment Model](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/development/ad-fs-risk-assessment-model) that uses the risk level of a user determined by [Azure AD Identity Protection](https://docs.microsoft.com/en-us/azure/active-directory/identity-protection/overview-identity-protection) to allow or block authentication or enforce additional authentication (MFA) while authenticating the user againsts AD FS. 
 
@@ -198,6 +198,9 @@ For testing purpose, to make a user risky (with risk level = High) login to **[R
 
 The plug-in will block the user from authenticating</br> 
 ![model](media/risk30.png)
+
+ >[!NOTE]
+ >The sample plug-in gets the complete list of risky users for each authentication which can cause delay in authentication process. Therefore, the plug-in should be tested against an Azure AD tenant with less number of users to avoid delays or optimized to use caching or [Get riskyUser method](https://docs.microsoft.com/en-us/graph/api/riskyusers-get?view=graph-rest-beta&tabs=http) 
 
 
 ## Contributing
