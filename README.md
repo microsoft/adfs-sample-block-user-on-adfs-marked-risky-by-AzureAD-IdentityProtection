@@ -9,9 +9,9 @@ products: dotnet
 Build your own plug-in with [AD FS Risk Assessment Model](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/development/ad-fs-risk-assessment-model) that uses the risk level of a user determined by [Azure AD Identity Protection](https://docs.microsoft.com/en-us/azure/active-directory/identity-protection/overview-identity-protection) to allow or block authentication or enforce additional authentication (MFA) while authenticating the user againsts AD FS. 
 
 The plug-in once registered with AD FS runs in line with AD FS authentication process. For any user authenticating against AD FS, the plug-in pulls in the Risk Level of the user using the Azure AD Identity Protection [riskyUser API](https://docs.microsoft.com/en-us/graph/api/resources/riskyuser?view=graph-rest-beta) and initiates one of the follwing actions
-- Blocks authentication if user's risk level is “High”
-- Enforces additional authentication (MFA) if user's risk level is “Low” or “Medium”
-- Allows authentication if user's risk level is "none"
+- Blocks authentication if user's risk level is “high”
+- Enforces additional authentication (MFA) if user's risk level is “low” or “medium”
+- Allows authentication if user's risk level is "none", "hidden" or "unknownFutureValue"
 
  >[!NOTE]
  >This sample is only to illustrate how cloud intelligence from Azure AD Identity Protection can be used to further strengthen the AD FS authentication process. By no means is the plug-in we are building an enterprise ready solution. 
@@ -21,7 +21,7 @@ The plug-in once registered with AD FS runs in line with AD FS authentication pr
 
 - AD FS 2019 installed and configured
 - Synchronize AD (on-prem) users with Azure AD using synchronization tools such as [Azure AD Connect](https://docs.microsoft.com/en-us/azure/active-directory/hybrid/whatis-azure-ad-connect)
--  Azure AD Premium P2 license to be able to call [riskyUser API](https://docs.microsoft.com/en-us/graph/api/resources/riskyuser?view=graph-rest-beta)
+-  Azure AD Premium P2 license to be able to call [riskyUser API](https://docs.microsoft.com/en-us/graph/api/resources/riskyuser?view=graph-rest-beta) (https://graph.microsoft.com/beta/riskyUsers)
 - Configure additional authentication method for AD FS such as [Azure MFA](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/operations/configure-ad-fs-and-azure-mfa)
 - .NET Framework 4.7 and above
 - Visual Studio
