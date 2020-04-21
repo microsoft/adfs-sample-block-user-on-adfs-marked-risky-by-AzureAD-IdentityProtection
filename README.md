@@ -14,7 +14,7 @@ The plug-in once registered with AD FS runs in line with AD FS authentication pr
 - Allows authentication if user's risk level is "none", "hidden" or "unknownFutureValue"
 
  >[!NOTE]
- >This sample is only to illustrate how cloud intelligence from Azure AD Identity Protection can be used to further strengthen the AD FS authentication process. By no means is the plug-in we are building an enterprise ready solution. 
+ >This sample is only to illustrate how cloud intelligence from Azure AD Identity Protection can be used to further strengthen the AD FS authentication process. By no means is this sample plug-in we are building an enterprise ready solution. 
 
 
 ## Prerequisites
@@ -60,7 +60,7 @@ The following procedure will walk you through building a sample plug-in dll.
 
    </br> To get these perform the following steps as Administrator in **[Azure Portal](https://portal.azure.com/)**
    
-   a.    To get **Azure AD tenant name**, go to **[Azure Active Directory](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview)** blade and select **Properties** from the **Manage** section on the left navigation pane. (In my case the tenant name is fabtoso.com as shown under **Directory properties** in **Name** field)</br> </br>
+   a.    To get **Azure AD tenant name**, go to **[Azure Active Directory](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview)** blade and select **Properties** from the **Manage** section on the left navigation pane. Tenant name is the value in **Name** field under **Directory properties**)</br> </br>
    ![model](media/risk16.PNG)
    
    b.    To get the **Client ID** we first need to register the plug-in in Azure Active Directory. To do so, go to **[App Registration](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)**, click **New Registration** </br> </br>
@@ -175,11 +175,11 @@ That's it, the dll is now registered with AD FS and ready for use!
 
 The last step in setting up the sample is to configure the policies in AD FS to trigger additional authentication (MFA) when the user risk level is either "low" or "medium". To do so, open **Windows PowerShell** on AD FS server and run the following command 
 ```
-Set-AdfsRelyingPartyTrust -TargetName <Add Relying Party Name> -AdditionalAuthenticationRules exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "low"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "medium"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "high"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn");
+Set-AdfsRelyingPartyTrust -TargetName <Add Relying Party Name> -AdditionalAuthenticationRules 'exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "low"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "medium"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "high"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn");'
 ```
 In my case, the command is: 
 ```
-Set-AdfsRelyingPartyTrust -TargetName Calimsxray -AdditionalAuthenticationRules exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "low"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "medium"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "high"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn");
+Set-AdfsRelyingPartyTrust -TargetName Claimsxray -AdditionalAuthenticationRules 'exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "low"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "medium"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "high"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn");'
 ```
 
 
