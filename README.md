@@ -27,7 +27,9 @@ The plug-in once registered with AD FS runs in line with AD FS authentication pr
 - Visual Studio
 
 
-## Build plug-in dll
+## Setting up the sample
+
+### Build plug-in dll 
 
 The following procedure will walk you through building a sample plug-in dll.
 
@@ -167,6 +169,19 @@ That's it, the dll is now registered with AD FS and ready for use!
  >``` 
  >UnRegister-AdfsThreatDetectionModule -Name "RiskyUserPlugin"
  >```
+
+
+### Configure MFA policies in AD FS
+
+The last step in setting up the sample is to configure the policies in AD FS to trigger additional authentication (MFA) when the user risk level is either "low" or "medium". To do so, open **Windows PowerShell** on AD FS server and run the following command 
+```
+Set-AdfsRelyingPartyTrust -TargetName <Add Relying Party Name> -AdditionalAuthenticationRules exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "low"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "medium"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "high"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn");
+```
+In my case, the command is: 
+```
+Set-AdfsRelyingPartyTrust -TargetName Calimsxray -AdditionalAuthenticationRules exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "low"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "medium"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn"); exists([Type == "http://schemas.microsoft.com/ws/2017/04/identity/claims/riskscore", Value == "high"])=>issue(Type = "http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod", Value = "http://schemas.microsoft.com/claims/multipleauthn");
+```
+
 
 ## Running the sample
 
