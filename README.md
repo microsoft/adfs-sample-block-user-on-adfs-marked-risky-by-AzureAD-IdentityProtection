@@ -23,7 +23,7 @@ The plug-in once registered with AD FS runs in line with AD FS authentication pr
 - Synchronize AD (on-prem) users with Azure AD using synchronization tools such as [Azure AD Connect](https://docs.microsoft.com/en-us/azure/active-directory/hybrid/whatis-azure-ad-connect)
 -  Azure AD Premium P2 license to be able to call [riskyUser API](https://docs.microsoft.com/en-us/graph/api/resources/riskyuser?view=graph-rest-beta) (https://graph.microsoft.com/beta/riskyUsers)
  >[!NOTE]
- >This sample plug-in gets the complete list of risky users for each authentication which can cause delay in authentication process. Therefore, the plug-in should be tested against an Azure AD tenant with a few number of users to avoid delays or should be optimized to use [Get riskyUser method](https://docs.microsoft.com/en-us/graph/api/riskyusers-get?view=graph-rest-beta&tabs=http) that gets the details of only the user trying to authenticate
+ >This sample plug-in gets the complete list of risky users for each authentication which can cause delay in authentication process. Therefore, the plug-in should be tested against an Azure AD tenant with a few number of users to avoid delays or should be optimized to use [Get riskyUser method](https://docs.microsoft.com/en-us/graph/api/riskyusers-get?view=graph-rest-beta&tabs=http) that gets the details of a specific user
 - Configure additional authentication method for AD FS such as [Azure MFA](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/operations/configure-ad-fs-and-azure-mfa)
 - .NET Framework 4.7 and above
 - Visual Studio
